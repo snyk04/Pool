@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Pool.Balls;
 using Pool.GameRules;
 
-namespace Pool.Tests.EditMode
+namespace Pool.Tests.EditMode.GameRules
 {
     public class BallMock : IBall
     {

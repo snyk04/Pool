@@ -4,7 +4,7 @@ using Pool.Balls;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Pool.Tests.PlayMode
+namespace Pool.Tests.PlayMode.Balls
 {
     public class BallTest
     {

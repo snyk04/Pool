@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Pool.GameRules;
 
-namespace Pool.Tests.EditMode
+namespace Pool.Tests.EditMode.GameRules
 {
     public class BallTrackerMock : IBallTracker
     {
