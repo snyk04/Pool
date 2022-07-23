@@ -6,7 +6,7 @@ namespace Pool.Input
 {
     public class PlayerInput : IPlayerInput
     {
-        private const float HitForce = 2.5f;
+        private const float HitForce = 10;
         
         private readonly IBallHitter _ballHitter;
         private readonly Rigidbody2D _ball;
