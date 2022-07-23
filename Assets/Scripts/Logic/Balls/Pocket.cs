@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Pool.Balls
 {
@@ -8,9 +7,9 @@ namespace Pool.Balls
         public void OnCollisionEnter2D(Collision2D col)
         {
             GameObject collisionObject = col.gameObject;
-            if (collisionObject.TryGetComponent(out BallComponent _))
+            if (collisionObject.TryGetComponent(out BallComponent ball))
             {
-                Object.Destroy(collisionObject);
+                ball.Object.Destroy();
             }
         }
     }
