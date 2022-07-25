@@ -44,7 +44,7 @@ namespace Pool.Input
                     ""name"": """",
                     ""id"": ""08b02c56-f863-4e90-94e4-964ec69c1c66"",
                     ""path"": ""<Touchscreen>/Press"",
-                    ""interactions"": ""SlowTap"",
+                    ""interactions"": ""SlowTap(duration=0.1,pressPoint=0.1)"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Hit"",
