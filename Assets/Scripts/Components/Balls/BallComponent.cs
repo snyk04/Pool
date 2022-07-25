@@ -1,4 +1,6 @@
-﻿using Pool.Common;
+﻿using System;
+using Pool.Common;
+using UnityEngine;
 
 namespace Pool.Balls
 {
@@ -7,6 +9,11 @@ namespace Pool.Balls
         protected override Ball CreateObject()
         {
             return new Ball(gameObject);
+        }
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            Object.OnCollisionEnter2D(col);
         }
     }
 }

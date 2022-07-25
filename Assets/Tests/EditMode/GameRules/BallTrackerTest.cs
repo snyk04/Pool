@@ -2,13 +2,15 @@
 using NUnit.Framework;
 using Pool.Balls;
 using Pool.GameRules;
+using UnityEngine;
 
 namespace Pool.Tests.EditMode.GameRules
 {
     public class BallMock : IBall
     {
         public event Action OnDestroy;
-        
+        public event Action<GameObject> OnCollision;
+
         public void Destroy()
         {
             OnDestroy?.Invoke();

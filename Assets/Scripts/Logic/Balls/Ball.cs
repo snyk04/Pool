@@ -9,6 +9,7 @@ namespace Pool.Balls
         private readonly GameObject _gameObject;
 
         public event Action OnDestroy;
+        public event Action<GameObject> OnCollision;
 
         public Ball(GameObject gameObject)
         {
@@ -19,6 +20,11 @@ namespace Pool.Balls
         {
             OnDestroy?.Invoke();
             Object.Destroy(_gameObject);
+        }
+        
+        public void OnCollisionEnter2D(Collision2D col)
+        {
+            OnCollision?.Invoke(col.gameObject);
         }
     }
 }
