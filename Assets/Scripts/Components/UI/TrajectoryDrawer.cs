@@ -20,6 +20,8 @@ namespace Pool.UI
         [Header("Settings")]
         [SerializeField] private int _amountOfTrajectoryPoints;
 
+        private List<Vector3> _playerBallTrajectoryPoints;
+        private List<Vector3> _collisionBallTrajectoryPoints;
         private Dictionary<Rigidbody2D, BodyData> _rigidbodiesData;
 
         private bool _isAiming;
@@ -27,6 +29,8 @@ namespace Pool.UI
         private void Awake()
         {
             _rigidbodiesData = new Dictionary<Rigidbody2D, BodyData>();
+            _playerBallTrajectoryPoints = new List<Vector3>();
+            _collisionBallTrajectoryPoints = new List<Vector3>();
 
             _playerInput.Object.OnAimStart += HandleAimStart;
             _playerInput.Object.OnAimEnd += HandleAimEnd;
@@ -52,10 +56,6 @@ namespace Pool.UI
         
         private void DrawTrajectories()
         {
-            // TODO : Maybe use same arrays, just clear them?
-            var playerBallTrajectoryPoints = new List<Vector3>();
-            var collisionBallTrajectoryPoints = new List<Vector3>();
-            
             Rigidbody2D playerBallCopy = CopyBall(_ballsContainer.Object.PlayerBall);
             List<Rigidbody2D> fieldBallsCopies = _ballsContainer.Object.FieldBalls.Select(CopyBall).ToList();
 
@@ -83,7 +83,7 @@ namespace Pool.UI
             
             HitBall(playerBallCopy);
             Physics2D.simulationMode = SimulationMode2D.Script;
-            SimulatePhysics(playerBallTrajectoryPoints, collisionBallTrajectoryPoints, ref playerBallCopy, 
+            SimulatePhysics(_playerBallTrajectoryPoints, _collisionBallTrajectoryPoints, ref playerBallCopy, 
                 ref collisionBall, ref isPlayerBallDestroyed, ref isCollisionBallDestroyed);
             
             DestroyObject(playerBallCopy);
@@ -95,8 +95,10 @@ namespace Pool.UI
             LoadRigidbodyData(_ballsContainer.Object.PlayerBall);
             _ballsContainer.Object.FieldBalls.ForEach(LoadRigidbodyData);
 
-            ConfigureLineRenderer(_playerBallLineRenderer, playerBallTrajectoryPoints.ToArray());
-            ConfigureLineRenderer(_fieldBallLineRenderer, collisionBallTrajectoryPoints.ToArray());
+            ConfigureLineRenderer(_playerBallLineRenderer, _playerBallTrajectoryPoints.ToArray());
+            ConfigureLineRenderer(_fieldBallLineRenderer, _collisionBallTrajectoryPoints.ToArray());
+            _playerBallTrajectoryPoints.Clear();
+            _collisionBallTrajectoryPoints.Clear();
             
             Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
         }
