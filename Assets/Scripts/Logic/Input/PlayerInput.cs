@@ -59,16 +59,19 @@ namespace Pool.Input
         private void HandleHitStarted(InputAction.CallbackContext ctx)
         {
             OnAimStart?.Invoke();
+            Debug.Log("aim start");
         }
         private void HandleHitCanceled(InputAction.CallbackContext ctx)
         {
             OnAimEnd?.Invoke();
+            Debug.Log("aim cancel");
         }
         private void HandleHitPerformed(InputAction.CallbackContext ctx)
         {
             OnAimEnd?.Invoke();
 
             _ballHitter.Hit(_playerBall, GetBallToTouchVector().normalized, HitPower);
+            Debug.Log("aim performed");
         }
         private Vector2 GetBallToTouchVector()
         {

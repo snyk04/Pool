@@ -8,26 +8,26 @@ namespace Pool.Balls
 {
     public class BallVelocityTracker : IBallVelocityTracker
     {
-        private readonly List<Rigidbody2D> _balls;
-
         private readonly float _velocityToStop;
         private readonly float _angularVelocityToStop;
 
         public event Action OnBallsStartedMoving;
         public event Action OnBallsStoppedMoving;
 
+        private readonly List<Rigidbody2D> _balls;
         private bool _areBallsMoving;
         private bool _isGameRunning;
         
-        public BallVelocityTracker(IGameCycle gameCycle, List<Rigidbody2D> balls, float velocityToStop,
+        public BallVelocityTracker(IGameCycle gameCycle, IBallsContainer ballsContainer, float velocityToStop,
             float angularVelocityToStop)
         {
-            _balls = balls;
             _velocityToStop = velocityToStop;
             _angularVelocityToStop = angularVelocityToStop;
             
             gameCycle.OnGameEnd += _ => _isGameRunning = false;
-            _balls.ForEach(ball => ball.GetComponent<BallComponent>().Object.OnDestroy += () => _balls.Remove(ball));
+            
+            _balls = new List<Rigidbody2D>(ballsContainer.FieldBalls) { ballsContainer.PlayerBall };
+            _balls.ForEach(rb => { rb.GetComponent<BallComponent>().Object.OnDestroy += () => _balls.Remove(rb); });
 
             _isGameRunning = true;
         }

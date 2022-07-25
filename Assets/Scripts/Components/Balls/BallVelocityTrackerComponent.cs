@@ -12,7 +12,7 @@ namespace Pool.Balls
         [SerializeField] private GameCycleComponent _gameCycle;
         
         [Header("Objects")]
-        [SerializeField] private List<Rigidbody2D> _balls;
+        [SerializeField] private BallsContainerComponent _ballsContainer;
 
         [Header("Settings")]
         [SerializeField] private float _velocityToStop;
@@ -20,7 +20,8 @@ namespace Pool.Balls
         
         protected override BallVelocityTracker CreateObject()
         {
-            return new BallVelocityTracker(_gameCycle.Object, _balls, _velocityToStop, _angularVelocityToStop);
+            return new BallVelocityTracker(_gameCycle.Object, _ballsContainer.Object, _velocityToStop,
+                _angularVelocityToStop);
         }
 
         private void Update()

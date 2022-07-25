@@ -15,8 +15,7 @@ namespace Pool.UI
         [Header("Objects")] 
         [SerializeField] private LineRenderer _playerBallLineRenderer;
         [SerializeField] private LineRenderer _fieldBallLineRenderer;
-        [SerializeField] private Rigidbody2D _playerBall;
-        [SerializeField] private List<Rigidbody2D> _fieldBalls;
+        [SerializeField] private BallsContainerComponent _ballsContainer;
         
         [Header("Settings")]
         [SerializeField] private int _amountOfTrajectoryPoints;
@@ -31,11 +30,6 @@ namespace Pool.UI
 
             _playerInput.Object.OnAimStart += HandleAimStart;
             _playerInput.Object.OnAimEnd += HandleAimEnd;
-            
-            _fieldBalls.ForEach(rb =>
-            {
-                rb.GetComponent<BallComponent>().Object.OnDestroy += () => _fieldBalls.Remove(rb); 
-            });
         }
         private void Update()
         {
@@ -62,14 +56,14 @@ namespace Pool.UI
             var playerBallTrajectoryPoints = new List<Vector3>();
             var collisionBallTrajectoryPoints = new List<Vector3>();
             
-            Rigidbody2D playerBallCopy = CopyBall(_playerBall);
-            List<Rigidbody2D> fieldBallsCopies = _fieldBalls.Select(CopyBall).ToList();
+            Rigidbody2D playerBallCopy = CopyBall(_ballsContainer.Object.PlayerBall);
+            List<Rigidbody2D> fieldBallsCopies = _ballsContainer.Object.FieldBalls.Select(CopyBall).ToList();
 
-            SaveRigidbodyData(_playerBall);
-            _fieldBalls.ForEach(SaveRigidbodyData);
+            SaveRigidbodyData(_ballsContainer.Object.PlayerBall);
+            _ballsContainer.Object.FieldBalls.ForEach(SaveRigidbodyData);
 
-            DisableObject(_playerBall);
-            _fieldBalls.ForEach(DisableObject);
+            DisableObject(_ballsContainer.Object.PlayerBall);
+            _ballsContainer.Object.FieldBalls.ForEach(DisableObject);
 
             bool isPlayerBallDestroyed = false;
             bool isPlayerBallCollisionDetected = false;
@@ -88,20 +82,23 @@ namespace Pool.UI
             };
             
             HitBall(playerBallCopy);
+            Physics2D.simulationMode = SimulationMode2D.Script;
             SimulatePhysics(playerBallTrajectoryPoints, collisionBallTrajectoryPoints, ref playerBallCopy, 
                 ref collisionBall, ref isPlayerBallDestroyed, ref isCollisionBallDestroyed);
             
             DestroyObject(playerBallCopy);
             fieldBallsCopies.ForEach(DestroyObject);
             
-            EnableObject(_playerBall);
-            _fieldBalls.ForEach(EnableObject);
+            EnableObject(_ballsContainer.Object.PlayerBall);
+            _ballsContainer.Object.FieldBalls.ForEach(EnableObject);
             
-            LoadRigidbodyData(_playerBall);
-            _fieldBalls.ForEach(LoadRigidbodyData);
+            LoadRigidbodyData(_ballsContainer.Object.PlayerBall);
+            _ballsContainer.Object.FieldBalls.ForEach(LoadRigidbodyData);
 
             ConfigureLineRenderer(_playerBallLineRenderer, playerBallTrajectoryPoints.ToArray());
             ConfigureLineRenderer(_fieldBallLineRenderer, collisionBallTrajectoryPoints.ToArray());
+            
+            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
         }
         private Rigidbody2D CopyBall(Rigidbody2D ball)
         {
@@ -148,7 +145,6 @@ namespace Pool.UI
             ICollection<Vector3> collisionBallTrajectoryPoints, ref Rigidbody2D playerBallCopy, 
             ref Rigidbody2D collisionBall, ref bool isPlayerBallDestroyed, ref bool isCollisionBallDestroyed)
         {
-            Physics2D.simulationMode = SimulationMode2D.Script;
             for (int i = 0; i < _amountOfTrajectoryPoints; i++)
             {
                 if (!isPlayerBallDestroyed)
@@ -161,7 +157,6 @@ namespace Pool.UI
                 }
                 Physics2D.Simulate(Time.fixedDeltaTime);
             }
-            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
         }
         private void DestroyObject(Component component)
         {

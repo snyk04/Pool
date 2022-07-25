@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pool.Balls;
 
 namespace Pool.GameRules
@@ -11,12 +12,12 @@ namespace Pool.GameRules
 
         private int _amountOfFieldBallsLeft;
 
-        public BallTracker(IBall playerBall, IReadOnlyCollection<IBall> fieldBalls)
+        public BallTracker(IBallsContainer ballsContainer)
         {
-            playerBall.OnDestroy += () => OnPlayerBallDestroyed?.Invoke();
+            ballsContainer.PlayerBall.GetComponent<BallComponent>().Object.OnDestroy += () => OnPlayerBallDestroyed?.Invoke();
             
-            _amountOfFieldBallsLeft = fieldBalls.Count;
-            foreach (IBall fieldBall in fieldBalls)
+            _amountOfFieldBallsLeft = ballsContainer.FieldBalls.Count;
+            foreach (IBall fieldBall in ballsContainer.FieldBalls.Select(rb => rb.GetComponent<BallComponent>().Object))
             {
                 fieldBall.OnDestroy += HandleFieldBallDestroyed;
             }
