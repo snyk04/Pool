@@ -139,7 +139,7 @@ namespace Pool.UI
         {
             Vector2 touchPosition = Touchscreen.current.position.ReadValue();
             Vector2 touchPositionInWorldCoordinates = Camera.main.ScreenToWorldPoint(touchPosition);
-            Vector2 direction = (touchPositionInWorldCoordinates - ball.position).normalized;
+            Vector2 direction = (ball.position - touchPositionInWorldCoordinates).normalized;
             
             ball.velocity = direction * _playerInput.Object.HitPower;
         }

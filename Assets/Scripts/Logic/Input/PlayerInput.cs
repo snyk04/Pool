@@ -74,7 +74,7 @@ namespace Pool.Input
         {
             Vector2 touchPosition = Touchscreen.current.position.ReadValue();
             Vector3 worldTouchPosition = Camera.main!.ScreenToWorldPoint(touchPosition);
-            return worldTouchPosition - _playerBall.transform.position;
+            return _playerBall.transform.position - worldTouchPosition;
         }
         
         public void Enable()
