@@ -1,5 +1,6 @@
 ﻿using System;
 using Pool.Balls;
+using Pool.GameRules;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,8 +18,10 @@ namespace Pool.Input
         }
         public float MaxHitPower { get; }
 
-        // TODO : Disable input when game is over
         private readonly IBallHitter _ballHitter;
+        private readonly IGameCycle _gameCycle;
+        private readonly IBallVelocityTracker _ballVelocityTracker;
+        
         private readonly Rigidbody2D _playerBall;
         private readonly InputAction _inputAction;
 
@@ -28,12 +31,14 @@ namespace Pool.Input
         public event Action OnAimStart;
         public event Action OnAimEnd;
         
-        public PlayerInput(IBallHitter ballHitter, Rigidbody2D playerBall, float minHitPower, float maxHitPower,
-            float deltaToHitPowerRatio)
+        public PlayerInput(IBallHitter ballHitter, IGameCycle gameCycle, IBallVelocityTracker ballVelocityTracker,
+            Rigidbody2D playerBall, float minHitPower, float maxHitPower, float deltaToHitPowerRatio)
         {
             _ballHitter = ballHitter;
-            _playerBall = playerBall;
+            _gameCycle = gameCycle;
+            _ballVelocityTracker = ballVelocityTracker;
             
+            _playerBall = playerBall;
             _inputAction = new Controls().Player.Hit;
 
             _minHitPower = minHitPower;
@@ -43,6 +48,10 @@ namespace Pool.Input
             _inputAction.started += HandleHitStarted;
             _inputAction.canceled += HandleHitCanceled;
             _inputAction.performed += HandleHitPerformed;
+
+            _gameCycle.OnGameEnd += _ => Disable();
+            _ballVelocityTracker.OnBallsStartedMoving += Disable;
+            _ballVelocityTracker.OnBallsStoppedMoving += Enable;
             
             Enable();
         }

@@ -1,5 +1,6 @@
 ﻿using Pool.Balls;
 using Pool.Common;
+using Pool.GameRules;
 using UnityEngine;
 
 namespace Pool.Input
@@ -8,6 +9,8 @@ namespace Pool.Input
     {
         [Header("References")]
         [SerializeField] private BallHitterComponent _ballHitter;
+        [SerializeField] private GameCycleComponent _gameCycleComponent;
+        [SerializeField] private BallVelocityTrackerComponent _ballVelocityTracker;
         
         [Header("Objects")]
         [SerializeField] private Rigidbody2D _playerBall;
@@ -19,7 +22,8 @@ namespace Pool.Input
         
         protected override PlayerInput CreateObject()
         {
-            return new PlayerInput(_ballHitter.Object, _playerBall, _minHitPower, _maxHitPower, _deltaToHitPowerRatio);
+            return new PlayerInput(_ballHitter.Object, _gameCycleComponent.Object, _ballVelocityTracker.Object, 
+                _playerBall, _minHitPower, _maxHitPower, _deltaToHitPowerRatio);
         }
     }
 }
