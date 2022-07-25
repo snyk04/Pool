@@ -1860,8 +1860,8 @@ MonoBehaviour:
   - {fileID: 2018877692}
   - {fileID: 1386432272}
   - {fileID: 1842772223}
-  _velocityToStop: 0.1
-  _angularVelocityToStop: 0.1
+  _velocityToStop: 0.01
+  _angularVelocityToStop: 0.01
 --- !u!1 &876190631
 GameObject:
   m_ObjectHideFlags: 0
