@@ -17,7 +17,6 @@ namespace Pool.Audio
                     if (obj.TryGetComponent(out BallComponent _))
                     {
                         PlaySound();
-                        Debug.Log("playing");
                     }
                 }
             };
