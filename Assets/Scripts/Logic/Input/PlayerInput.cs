@@ -72,9 +72,8 @@ namespace Pool.Input
         }
         private Vector2 GetBallToTouchVector()
         {
-            // TODO : Handle null
             Vector2 touchPosition = Touchscreen.current.position.ReadValue();
-            Vector3 worldTouchPosition = Camera.main.ScreenToWorldPoint(touchPosition);
+            Vector3 worldTouchPosition = Camera.main!.ScreenToWorldPoint(touchPosition);
             return worldTouchPosition - _playerBall.transform.position;
         }
         
